@@ -1,12 +1,12 @@
 ---
-title: AAVE
+title: Aave
 sidebar_position: 0
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-In this tutorial we will create an adapter for UniswapV2.
+In this tutorial we will create an adapter for Aave V2.
 
 Create a new folder in `/src/adapters` and create an index file in it: `index.(js|ts)`.
 
@@ -15,7 +15,7 @@ Export your adapter defintion:
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```js title="/src/adapters/uniswap-v2-tuto/index.js"
+```js title="/src/adapters/aave-v2-tuto/index.js"
 const adapter = {};
 
 module.exports = adapter;
@@ -24,7 +24,7 @@ module.exports = adapter;
 </TabItem>
 <TabItem value="ts" label="Typescript">
 
-```ts title="/src/adapters/uniswap-v2-tuto/index.js"
+```ts title="/src/adapters/aave-v2-tuto/index.js"
 import { Adapter } from "@lib/adapter";
 
 const adapter: Adapter = {};
@@ -42,16 +42,15 @@ List your project information. This will be visible in the app:
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```js title="/src/adapters/uniswap-v2-tuto/index.js"
+```js title="/src/adapters/aave-v2-tuto/index.js"
 const adapter = {
-  id: "uniswap-v2-tuto",
-  name: "UniswapV2",
-  description:
-    "Swap, earn, and build on the leading decentralized crypto trading protocol.",
-  coingecko: "uniswap",
-  defillama: "uniswap",
+  id: "aave-v2-tuto",
+  name: "Aave V2",
+  description: "Earn interest, borrow assets, and build applications",
+  coingecko: "aave",
+  defillama: "aave-v2",
   links: {
-    website: "https://uniswap.org/",
+    website: "https://aave.com/",
   },
 };
 ```
@@ -59,16 +58,15 @@ const adapter = {
 </TabItem>
 <TabItem value="ts" label="Typescript">
 
-```ts title="/src/adapters/uniswap-v2-tuto/index.js"
+```ts title="/src/adapters/aave-v2-tuto/index.js"
 const adapter: Adapter = {
-  id: "uniswap-v2-tuto",
-  name: "UniswapV2",
-  description:
-    "Swap, earn, and build on the leading decentralized crypto trading protocol.",
-  coingecko: "uniswap",
-  defillama: "uniswap",
+  id: "aave-v2-tuto",
+  name: "Aave V2",
+  description: "Earn interest, borrow assets, and build applications",
+  coingecko: "aave",
+  defillama: "aave-v2",
   links: {
-    website: "https://uniswap.org/",
+    website: "https://aave.com/",
   },
 };
 ```

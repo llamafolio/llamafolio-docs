@@ -8,30 +8,67 @@ import TabItem from "@theme/TabItem";
 
 # Contracts
 
-List LP contracts: a helper function exists to retrieve pools of a UniswapV2Factory-like contract.
+## Lending Pool
+
+The lending pool contract is used to get lending/borrowing positions.
 
 <Tabs>
 <TabItem value="js" label="JavaScript">
 
-```js title="/src/adapters/uniswap-v2-tuto/index.js"
-async function getContracts() {
-    return [
-        {
-            
-        }
-    ]
-}
+```js title="/src/adapters/aave-v2-tuto/index.js"
+const lendingPoolContract = {
+  name: "LendingPool",
+  displayName: "AAVE Lending",
+  chain: "ethereum",
+  address: "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+};
 ```
 
 </TabItem>
 <TabItem value="ts" label="Typescript">
 
-```ts title="/src/adapters/uniswap-v2-tuto/index.js"
-import { Adapter } from "@lib/adapter";
+```ts title="/src/adapters/aave-v2-tuto/index.js"
+import { Contract } from "@lib/adapter";
 
-const adapter: Adapter = {};
+const lendingPoolContract: Contract = {
+  name: "LendingPool",
+  displayName: "AAVE Lending",
+  chain: "ethereum",
+  address: "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+};
+```
 
-export default adapter;
+</TabItem>
+</Tabs>
+
+Export contracts:
+
+<Tabs>
+<TabItem value="js" label="JavaScript">
+
+```js title="/src/adapters/aave-v2-tuto/index.js"
+const adapter = {
+  // ...
+  getContracts() {
+    return {
+      contracts: [lendingPoolContract],
+    };
+  },
+};
+```
+
+</TabItem>
+<TabItem value="ts" label="Typescript">
+
+```ts title="/src/adapters/aave-v2-tuto/index.js"
+const adapter: Adapter = {
+  // ...
+  getContracts() {
+    return {
+      contracts: [lendingPoolContract],
+    };
+  },
+};
 ```
 
 </TabItem>
