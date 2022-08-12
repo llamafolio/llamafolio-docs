@@ -1,7 +1,7 @@
 import React from "react";
-import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 
 import styles from "./index.module.css";
@@ -9,7 +9,7 @@ import styles from "./index.module.css";
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={clsx("hero hero--primary", styles.heroBanner)}>
+    <header className={styles.heroBanner}>
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
@@ -27,13 +27,27 @@ function HomepageHeader() {
 }
 
 export default function Home() {
-  const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
-    >
+    <Layout title="LlamaFolio docs">
       <HomepageHeader />
+
+      <main>
+        <div className="container text--center">
+          <div className="row margin-bottom--lg">
+            <div className="col" />
+
+            <div className="col">
+              <img
+                alt="LlamaFolio full image"
+                className={styles.llamaFull}
+                src={useBaseUrl("/img/llama-full.svg")}
+                width="300"
+                height="400"
+              />
+            </div>
+          </div>
+        </div>
+      </main>
     </Layout>
   );
 }

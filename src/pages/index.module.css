@@ -10,6 +10,19 @@
   overflow: hidden;
 }
 
+/* .llamaFull {
+  position: absolute;
+  bottom: 148px;
+  right: 60px;
+} */
+
+@media screen and (max-width: 996px) {
+  .llamaFull {
+    width: 150px;
+    height: 200px;
+  }
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
