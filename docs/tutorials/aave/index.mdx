@@ -1,77 +1,26 @@
 ---
-title: Aave
+title: Aave v2
 sidebar_position: 0
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-In this tutorial we will create an adapter for Aave V2.
+For the purpose of this tutorial, delete the folder `/protocol/aave-v2`.
 
-Create a new folder in `/src/adapters` and create an index file in it: `index.(js|ts)`.
+Go to [DefiLlama](https://defillama.com), search for "AAVE V2" and copy the id from the [URL](https://defillama.com/protocol/aave-v2), in this case `aave-v2`.
 
-Export your adapter defintion:
+To create the adapter, run this command with your DefiLlama ID:
 
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```js title="/src/adapters/aave-v2-tuto/index.js"
-const adapter = {};
-
-module.exports = adapter;
+```bash
+npm run create-adapter aave-v2
 ```
 
-</TabItem>
-<TabItem value="ts" label="Typescript">
+This automatically exports your adapter defintions:
 
-```ts title="/src/adapters/aave-v2-tuto/index.js"
-import { Adapter } from "@lib/adapter";
+- `/protocol/aave-v2/avax/index.ts`
+- `/protocol/aave-v2/ethereum/index.ts`
+- `/protocol/aave-v2/polygon/index.ts`
+- `/protocol/aave-v2/index.ts`
 
-const adapter: Adapter = {};
-
-export default adapter;
-```
-
-</TabItem>
-</Tabs>
-
-# Metadata
-
-List your project information. This will be visible in the app:
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```js title="/src/adapters/aave-v2-tuto/index.js"
-const adapter = {
-  id: "aave-v2-tuto",
-  name: "Aave V2",
-  description: "Earn interest, borrow assets, and build applications",
-  coingecko: "aave",
-  defillama: "aave-v2",
-  links: {
-    website: "https://aave.com/",
-  },
-};
-```
-
-</TabItem>
-<TabItem value="ts" label="Typescript">
-
-```ts title="/src/adapters/aave-v2-tuto/index.js"
-const adapter: Adapter = {
-  id: "aave-v2-tuto",
-  name: "Aave V2",
-  description: "Earn interest, borrow assets, and build applications",
-  coingecko: "aave",
-  defillama: "aave-v2",
-  links: {
-    website: "https://aave.com/",
-  },
-};
-```
-
-</TabItem>
-</Tabs>
-
-You can find the full interface [here](/docs/interface).
+In the following sections we will only focus on Ethereum but the logic can be shared across the other chains.

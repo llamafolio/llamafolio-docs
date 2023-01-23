@@ -5,27 +5,43 @@ sidebar_position: 3
 
 ## Metadata
 
-```ts
-interface Adapter {
-  id: string;
-  name: string;
-  description: string;
-  // CoinGecko ID
-  coingecko?: string;
-  // DefiLlama ID
-  defillama?: string;
-  links: Links;
-}
+:::info
 
-type Links = {
-  website?: string;
-  doc?: string;
-  github?: string;
-  twitter?: string;
-  telegram?: string;
-  discord?: string;
-  medium?: string;
-};
+The protocol should be listed on DefiLlama before LlamaFolio.
+
+https://docs.llama.fi/list-your-project/submit-a-project
+
+:::
+
+These types are exported in `@lib/adapter`.
+
+```ts
+interface Adapter extends Partial<Record<Chain, AdapterHandler>> {
+  /**
+   * DefiLlama slug
+   */
+  id: string;
+}
+```
+
+# Context
+
+Context is passed through the app and contain info about the current adapter / chain as well as the block height.
+
+```ts
+interface BaseContext {
+  chain: Chain;
+  adapterId: string;
+  blockHeight?: number;
+}
+```
+
+When retrieving balances, the context also contains the current user address.
+
+```ts
+export interface BalancesContext extends BaseContext {
+  address: string;
+}
 ```
 
 # Contracts
@@ -33,25 +49,74 @@ type Links = {
 List the contracts defined in your protocol: they will be used later to retrieve the account positions.
 
 ```ts
-interface Adapter {
-  // ...
-  getContracts: () => ContractsConfig | Promise<ContractsConfig>;
+interface AdapterHandler {
+  getContracts: GetContractsHandler;
+}
+```
+
+```ts
+interface ContractsMap {
+  [key: string]: Contract | Contract[] | RawContract | RawContract[];
 }
 
-type BaseContract = {
-  chain: Chain;
-  address: string;
+interface ContractsConfig<C extends ContractsMap, P extends ContractsMap> {
+  contracts: C;
+  props?: P;
+  revalidate?: number;
+  revalidateProps?: { [key: string]: any };
+}
+
+/**
+ * RawContract is automatically mapped to Contract
+ */
+type ExcludeRawContract<T> = {
+  [P in keyof T]: Exclude<T[P], RawContract | RawContract[]>;
 };
 
-type Contract = BaseContract & {
+/**
+ * Pass previous `revalidateProps` passed to `getContracts` handler to know where the previous revalidate process ended.
+ */
+type GetContractsHandler<
+  C extends ContractsMap = ContractsMap,
+  P extends ContractsMap = ContractsMap
+> = (
+  ctx: BaseContext,
+  revalidateProps: { [key: string]: any }
+) => ContractsConfig<C, P> | Promise<ContractsConfig<C, P>>;
+```
+
+Contract definition:
+
+```ts
+type Category =
+  | "wallet"
+  | "lend"
+  | "borrow"
+  | "stake"
+  | "vest"
+  | "lock"
+  | "lp"
+  | "farm"
+  | "reward";
+
+type ContractStandard = "erc20" | "erc721";
+
+interface BaseContract {
+  // discriminators
+  standard?: ContractStandard;
+  category?: Category;
+
   name?: string;
   displayName?: string;
-};
+  chain: Chain;
+  address: string;
+  symbol?: string;
+  decimals?: number;
+  stable?: boolean;
 
-type ContractsConfig = {
-  contracts: Contract[];
-  revalidate?: number;
-};
+  // DefiLlama yields API identifier. Matches pool or pool_old
+  yieldKey?: string;
+}
 ```
 
 # Balances
@@ -65,35 +130,18 @@ interface Adapter {
   ) => BalancesConfig | Promise<BalancesConfig>;
 }
 
-type Token = {
-  chain: Chain;
-  address: string;
-  symbol: string;
-  decimals: number;
-};
-
-type Category =
-  | "wallet"
-  | "lend"
-  | "lend-rewards"
-  | "borrow"
-  | "borrow-stable"
-  | "borrow-variable"
-  | "farm"
-  | "lp"
-  | "lp-stable"
-  | "stake"
-  | "lock"
-  | "lock-rewards"
-  | "vest";
-
-type BaseBalance = Token & {
+export interface BaseBalance extends BaseContract {
   amount: BigNumber;
-};
+}
 
-type Balance = BaseBalance & {
-  category: Category;
-};
+export interface Balance extends BaseBalance {
+  // optional rewards
+  rewards?: BaseBalance[];
+  // optional underlying tokens.
+  // ex: aToken -> token (AAVE)
+  // ex: Uniswap Pair -> [token0, token1]
+  underlyings?: BaseBalance[];
+}
 
 export type BalancesConfig = {
   balances: Balance[];

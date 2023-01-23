@@ -8,10 +8,10 @@ LlamaFolio is an open source, permissionless and privacy conscious portfolio tra
 
 It makes it easy to visualize and track tokens and protocol positions across multiple chains.
 
-## Work In Progress
+## Beta
 
-LlamaFolio is not released yet, it's constantly improving as developers add more protocols.
+LlamaFolio is in Beta, there may be bugs, help us improve it product by reporting any issue.
 
-Feel free to ask us anything on Github or Twitter.
+Feel free to ask us anything on [Github](https://github.com/llamafolio), [Discord](https://discord.gg/e9DYgecJVk) or [Twitter](https://twitter.com/LlamaFolio).
 
 If you want to contribute, check out the following Docs and the Tutorials section.

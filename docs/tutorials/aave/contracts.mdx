@@ -3,73 +3,204 @@ title: Contracts
 sidebar_position: 1
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 # Contracts
+
+The **goal** of `getContracts` is to return all the contracts defined by a protocol. For instance:
+
+- staking contracts
+- governance contracts
+- lending / borrowing pools
+- DEX pairs
+- ...
+
+Important note: For performance reasons (ex: fetching 1 million pools), `getContracts` is executed on a regular basis, not during the update balance process.
 
 ## Lending Pool
 
-The lending pool contract is used to get lending/borrowing positions.
+The lending pool contract is used to get lending/borrowing assets:
 
-<Tabs>
-<TabItem value="js" label="JavaScript">
+- aTokens
+- stable debt tokens
+- variable debt tokens
 
-```js title="/src/adapters/aave-v2-tuto/index.js"
-const lendingPoolContract = {
-  name: "LendingPool",
-  displayName: "AAVE Lending",
-  chain: "ethereum",
-  address: "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
-};
-```
+On Ethereum mainnet, the lending pool contract is deployed at `0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9`.
 
-</TabItem>
-<TabItem value="ts" label="Typescript">
+To get reserves info, let's iterate on all reserve contract (using `getReservesList`) and call `getReserveData`.
 
-```ts title="/src/adapters/aave-v2-tuto/index.js"
-import { Contract } from "@lib/adapter";
+Get ABI from [Etherscan](https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9#code)
 
-const lendingPoolContract: Contract = {
-  name: "LendingPool",
-  displayName: "AAVE Lending",
-  chain: "ethereum",
-  address: "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
-};
-```
-
-</TabItem>
-</Tabs>
-
-Export contracts:
-
-<Tabs>
-<TabItem value="js" label="JavaScript">
-
-```js title="/src/adapters/aave-v2-tuto/index.js"
-const adapter = {
-  // ...
-  getContracts() {
-    return {
-      contracts: [lendingPoolContract],
-    };
+```ts title="/src/adapters/aave-v2/ethereum.ts"
+const abi = {
+  getReservesList: {
+    inputs: [],
+    name: "getReservesList",
+    outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  getReserveData: {
+    inputs: [{ internalType: "address", name: "asset", type: "address" }],
+    name: "getReserveData",
+    outputs: [
+      {
+        components: [
+          {
+            components: [
+              { internalType: "uint256", name: "data", type: "uint256" },
+            ],
+            internalType: "struct DataTypes.ReserveConfigurationMap",
+            name: "configuration",
+            type: "tuple",
+          },
+          {
+            internalType: "uint128",
+            name: "liquidityIndex",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "variableBorrowIndex",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "currentLiquidityRate",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "currentVariableBorrowRate",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "currentStableBorrowRate",
+            type: "uint128",
+          },
+          {
+            internalType: "uint40",
+            name: "lastUpdateTimestamp",
+            type: "uint40",
+          },
+          {
+            internalType: "address",
+            name: "aTokenAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "stableDebtTokenAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "variableDebtTokenAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "interestRateStrategyAddress",
+            type: "address",
+          },
+          { internalType: "uint8", name: "id", type: "uint8" },
+        ],
+        internalType: "struct DataTypes.ReserveData",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
 };
 ```
 
-</TabItem>
-<TabItem value="ts" label="Typescript">
+Create a function to fetch contracts:
 
-```ts title="/src/adapters/aave-v2-tuto/index.js"
-const adapter: Adapter = {
-  // ...
-  getContracts() {
-    return {
-      contracts: [lendingPoolContract],
-    };
-  },
-};
+- chain
+- address: address of the contract the user "interacted" with, either by making a transaction to it or by receiving it. In this example, the user receives aTokens when lending / borrowing on the platform.
+- underlyings: actual underlying token. aDAI -> DAI
+- category: 'lending' for aTokens, 'borrow' for debt tokens
+
+```ts
+async function getLendingPoolContracts(
+  ctx: BaseContext,
+  lendingPool: Contract
+) {
+  const contracts: Contract[] = [];
+
+  const reservesListRes = await call({
+    ctx,
+    target: lendingPool.address,
+    abi: abi.getReservesList,
+  });
+
+  const reservesList: string[] = reservesListRes.output;
+
+  const reservesDataRes = await multicall({
+    ctx,
+    calls: reservesList.map((reserveTokenAddress) => ({
+      target: lendingPool.address,
+      params: [reserveTokenAddress],
+    })),
+    abi: abi.getReserveData,
+  });
+
+  for (let i = 0; i < reservesDataRes.length; i++) {
+    const reserveDataRes = reservesDataRes[i];
+    if (!isSuccess(reserveDataRes)) {
+      continue;
+    }
+
+    const underlyingToken = reserveDataRes.input.params[0];
+    const aToken = reserveDataRes.output.aTokenAddress;
+    const stableDebtToken = reserveDataRes.output.stableDebtTokenAddress;
+    const variableDebtToken = reserveDataRes.output.variableDebtTokenAddress;
+
+    contracts.push(
+      {
+        chain: ctx.chain,
+        address: aToken,
+        underlyings: [underlyingToken],
+        category: "lend",
+      },
+      {
+        chain: ctx.chain,
+        address: stableDebtToken,
+        underlyings: [underlyingToken],
+        category: "borrow",
+        stable: true,
+      },
+      {
+        chain: ctx.chain,
+        address: variableDebtToken,
+        underlyings: [underlyingToken],
+        category: "borrow",
+        stable: false,
+      }
+    );
+  }
+
+  return contracts;
+}
 ```
 
-</TabItem>
-</Tabs>
+Return contracts in `getContracts`:
+
+```ts title="/src/adapters/aave-v2/ethereum.ts"
+const lendingPool: Contract = {
+  name: "Lending Pool",
+  address: "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+  chain: "ethereum",
+};
+
+export const getContracts = async (ctx: BaseContext) => {
+  const pools = await getLendingPoolContracts(ctx, lendingPool);
+
+  return {
+    contracts: {
+      pools,
+    },
+  };
+};
+```
