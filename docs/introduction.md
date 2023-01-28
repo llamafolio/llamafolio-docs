@@ -10,7 +10,7 @@ It makes it easy to visualize and track tokens and protocol positions across mul
 
 ## Beta
 
-LlamaFolio is in Beta, there may be bugs, help us improve it product by reporting any issue.
+LlamaFolio is in Beta, there may be bugs, help us improve the product by reporting any issue.
 
 Feel free to ask us anything on [Github](https://github.com/llamafolio), [Discord](https://discord.gg/e9DYgecJVk) or [Twitter](https://twitter.com/LlamaFolio).
 

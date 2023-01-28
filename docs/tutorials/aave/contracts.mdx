@@ -13,7 +13,7 @@ The **goal** of `getContracts` is to return all the contracts defined by a proto
 - DEX pairs
 - ...
 
-Important note: For performance reasons (ex: fetching 1 million pools), `getContracts` is executed on a regular basis, not during the update balance process.
+Important note: For performance reasons (ex: fetching 1 million pools), `getContracts` is executed on a regular basis, but not during the update balance process.
 
 ## Lending Pool
 
@@ -25,7 +25,7 @@ The lending pool contract is used to get lending/borrowing assets:
 
 On Ethereum mainnet, the lending pool contract is deployed at `0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9`.
 
-To get reserves info, let's iterate on all reserve contract (using `getReservesList`) and call `getReserveData`.
+To get reserves info, let's iterate on all reserve contracts (using `getReservesList`) and call `getReserveData`.
 
 Get ABI from [Etherscan](https://etherscan.io/address/0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9#code)
 
