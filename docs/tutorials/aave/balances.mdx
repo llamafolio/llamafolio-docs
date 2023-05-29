@@ -17,20 +17,17 @@ We can then add amount to the contract and the underlying.
 ```ts title="/src/adapters/aave-v2/ethereum.ts"
 import { getERC20BalanceOf } from "@lib/erc20";
 
-async function getLendingPoolBalances(ctx: BalancesContext, pools: Contract[]) {
-  const balances: Balance[] = await getERC20BalanceOf(ctx, pools);
+async function getLendingPoolBalances(ctx: BalancesContext, contracts: Contract[]) {
+  const balances: Balance[] = await getERC20BalanceOf(ctx, contracts as Token[])
 
   // use the same amount for underlyings
   for (const balance of balances) {
-    if (balance.amount.gt(0) && balance.underlyings) {
-      balance.underlyings[0] = {
-        ...balance.underlyings[0],
-        amount: BigNumber.from(balance.amount),
-      };
+    if (balance.amount > 0n && balance.underlyings) {
+      balance.underlyings[0] = { ...balance.underlyings[0], amount: balance.amount }
     }
   }
 
-  return balances;
+  return balances
 }
 ```
 

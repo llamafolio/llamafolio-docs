@@ -6,7 +6,7 @@ sidebar_position: 0
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-For the purpose of this tutorial, delete the folder `/protocol/aave-v2`.
+For the purpose of this tutorial, delete the folder `src/adapters/aave-v2`.
 
 Go to [DefiLlama](https://defillama.com), search for "AAVE V2" and copy the id from the [URL](https://defillama.com/protocol/aave-v2), in this case `aave-v2`.
 
@@ -18,9 +18,9 @@ npm run create-adapter aave-v2
 
 This automatically exports your adapter defintions:
 
-- `/protocol/aave-v2/avax/index.ts`
-- `/protocol/aave-v2/ethereum/index.ts`
-- `/protocol/aave-v2/polygon/index.ts`
-- `/protocol/aave-v2/index.ts`
+- `src/adapters/aave-v2/avax/index.ts`
+- `src/adapters/aave-v2/ethereum/index.ts`
+- `src/adapters/aave-v2/polygon/index.ts`
+- `src/adapters/aave-v2/index.ts`
 
 In the following sections we will only focus on Ethereum but the logic can be shared across the other chains.

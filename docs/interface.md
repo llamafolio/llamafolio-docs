@@ -40,7 +40,7 @@ When retrieving balances, the context also contains the current user address.
 
 ```ts
 export interface BalancesContext extends BaseContext {
-  address: string;
+  address: `0x${string}`;
 }
 ```
 
@@ -109,7 +109,7 @@ interface BaseContract {
   name?: string;
   displayName?: string;
   chain: Chain;
-  address: string;
+  address: `0x${string}`;
   symbol?: string;
   decimals?: number;
   stable?: boolean;
@@ -131,7 +131,7 @@ interface Adapter {
 }
 
 export interface BaseBalance extends BaseContract {
-  amount: BigNumber;
+  amount: bigint;
 }
 
 export interface Balance extends BaseBalance {

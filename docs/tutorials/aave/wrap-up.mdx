@@ -17,168 +17,181 @@ import { resolveBalances } from "@lib/balance";
 import { call } from "@lib/call";
 import { getERC20BalanceOf } from "@lib/erc20";
 import { multicall } from "@lib/multicall";
-import { isSuccess } from "@lib/type";
-import { BigNumber } from "ethers";
 
 const abi = {
   getReservesList: {
     inputs: [],
-    name: "getReservesList",
-    outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
-    stateMutability: "view",
-    type: "function",
+    name: 'getReservesList',
+    outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
+    stateMutability: 'view',
+    type: 'function',
   },
   getReserveData: {
-    inputs: [{ internalType: "address", name: "asset", type: "address" }],
-    name: "getReserveData",
+    inputs: [{ internalType: 'address', name: 'asset', type: 'address' }],
+    name: 'getReserveData',
     outputs: [
       {
         components: [
           {
-            components: [
-              { internalType: "uint256", name: "data", type: "uint256" },
-            ],
-            internalType: "struct DataTypes.ReserveConfigurationMap",
-            name: "configuration",
-            type: "tuple",
+            components: [{ internalType: 'uint256', name: 'data', type: 'uint256' }],
+            internalType: 'struct DataTypes.ReserveConfigurationMap',
+            name: 'configuration',
+            type: 'tuple',
           },
           {
-            internalType: "uint128",
-            name: "liquidityIndex",
-            type: "uint128",
+            internalType: 'uint128',
+            name: 'liquidityIndex',
+            type: 'uint128',
           },
           {
-            internalType: "uint128",
-            name: "variableBorrowIndex",
-            type: "uint128",
+            internalType: 'uint128',
+            name: 'variableBorrowIndex',
+            type: 'uint128',
           },
           {
-            internalType: "uint128",
-            name: "currentLiquidityRate",
-            type: "uint128",
+            internalType: 'uint128',
+            name: 'currentLiquidityRate',
+            type: 'uint128',
           },
           {
-            internalType: "uint128",
-            name: "currentVariableBorrowRate",
-            type: "uint128",
+            internalType: 'uint128',
+            name: 'currentVariableBorrowRate',
+            type: 'uint128',
           },
           {
-            internalType: "uint128",
-            name: "currentStableBorrowRate",
-            type: "uint128",
+            internalType: 'uint128',
+            name: 'currentStableBorrowRate',
+            type: 'uint128',
           },
           {
-            internalType: "uint40",
-            name: "lastUpdateTimestamp",
-            type: "uint40",
+            internalType: 'uint40',
+            name: 'lastUpdateTimestamp',
+            type: 'uint40',
           },
           {
-            internalType: "address",
-            name: "aTokenAddress",
-            type: "address",
+            internalType: 'address',
+            name: 'aTokenAddress',
+            type: 'address',
           },
           {
-            internalType: "address",
-            name: "stableDebtTokenAddress",
-            type: "address",
+            internalType: 'address',
+            name: 'stableDebtTokenAddress',
+            type: 'address',
           },
           {
-            internalType: "address",
-            name: "variableDebtTokenAddress",
-            type: "address",
+            internalType: 'address',
+            name: 'variableDebtTokenAddress',
+            type: 'address',
           },
           {
-            internalType: "address",
-            name: "interestRateStrategyAddress",
-            type: "address",
+            internalType: 'address',
+            name: 'interestRateStrategyAddress',
+            type: 'address',
           },
-          { internalType: "uint8", name: "id", type: "uint8" },
+          { internalType: 'uint8', name: 'id', type: 'uint8' },
         ],
-        internalType: "struct DataTypes.ReserveData",
-        name: "",
-        type: "tuple",
+        internalType: 'struct DataTypes.ReserveData',
+        name: '',
+        type: 'tuple',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
-};
+  getUserAccountData: {
+    inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
+    name: 'getUserAccountData',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalCollateralBase',
+        type: 'uint256',
+      },
+      { internalType: 'uint256', name: 'totalDebtBase', type: 'uint256' },
+      {
+        internalType: 'uint256',
+        name: 'availableBorrowsBase',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'currentLiquidationThreshold',
+        type: 'uint256',
+      },
+      { internalType: 'uint256', name: 'ltv', type: 'uint256' },
+      { internalType: 'uint256', name: 'healthFactor', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+} as const
 
-async function getLendingPoolContracts(
-  ctx: BaseContext,
-  lendingPool: Contract
-) {
-  const contracts: Contract[] = [];
+async function getLendingPoolContracts(ctx: BaseContext, lendingPool: Contract) {
+  const contracts: Contract[] = []
 
-  const reservesListRes = await call({
+  const reservesList = await call({
     ctx,
     target: lendingPool.address,
     abi: abi.getReservesList,
-  });
-
-  const reservesList: string[] = reservesListRes.output;
+  })
 
   const reservesDataRes = await multicall({
     ctx,
-    calls: reservesList.map((reserveTokenAddress) => ({
-      target: lendingPool.address,
-      params: [reserveTokenAddress],
-    })),
+    calls: reservesList.map(
+      (reserveTokenAddress) => ({ target: lendingPool.address, params: [reserveTokenAddress] } as const),
+    ),
     abi: abi.getReserveData,
-  });
+  })
 
   for (let i = 0; i < reservesDataRes.length; i++) {
-    const reserveDataRes = reservesDataRes[i];
-    if (!isSuccess(reserveDataRes)) {
-      continue;
+    const reserveDataRes = reservesDataRes[i]
+    if (!reserveDataRes.success) {
+      continue
     }
 
-    const underlyingToken = reserveDataRes.input.params[0];
-    const aToken = reserveDataRes.output.aTokenAddress;
-    const stableDebtToken = reserveDataRes.output.stableDebtTokenAddress;
-    const variableDebtToken = reserveDataRes.output.variableDebtTokenAddress;
+    const underlyingToken = reserveDataRes.input.params[0]
+    const aToken = reserveDataRes.output.aTokenAddress
+    const stableDebtToken = reserveDataRes.output.stableDebtTokenAddress
+    const variableDebtToken = reserveDataRes.output.variableDebtTokenAddress
 
     contracts.push(
       {
         chain: ctx.chain,
         address: aToken,
         underlyings: [underlyingToken],
-        category: "lend",
+        category: 'lend',
       },
       {
         chain: ctx.chain,
         address: stableDebtToken,
         underlyings: [underlyingToken],
-        category: "borrow",
+        category: 'borrow',
         stable: true,
       },
       {
         chain: ctx.chain,
         address: variableDebtToken,
         underlyings: [underlyingToken],
-        category: "borrow",
+        category: 'borrow',
         stable: false,
-      }
-    );
+      },
+    )
   }
 
-  return contracts;
+  return contracts
 }
 
-async function getLendingPoolBalances(ctx: BalancesContext, pools: Contract[]) {
-  const balances: Balance[] = await getERC20BalanceOf(ctx, pools);
+async function getLendingPoolBalances(ctx: BalancesContext, contracts: Contract[]) {
+  const balances: Balance[] = await getERC20BalanceOf(ctx, contracts as Token[])
 
   // use the same amount for underlyings
   for (const balance of balances) {
-    if (balance.amount.gt(0) && balance.underlyings) {
-      balance.underlyings[0] = {
-        ...balance.underlyings[0],
-        amount: BigNumber.from(balance.amount),
-      };
+    if (balance.amount > 0n && balance.underlyings) {
+      balance.underlyings[0] = { ...balance.underlyings[0], amount: balance.amount }
     }
   }
 
-  return balances;
+  return balances
 }
 
 const lendingPool: Contract = {
@@ -216,7 +229,7 @@ export const getBalances: GetBalancesHandler<typeof getContracts> = async (
 To test the adapter locally, run:
 
 ```bash
-npm run adapter aave-v2 ethereum 0x777777c9898d384f785ee44acfe945efdff5f3e0
+pnpm run adapter aave-v2 ethereum 0x777777c9898d384f785ee44acfe945efdff5f3e0
 ```
 
 (or any address of your choice). You should see lending and borrowing balances displayed in a table.

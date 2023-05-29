@@ -112,7 +112,7 @@ const abi = {
     stateMutability: "view",
     type: "function",
   },
-};
+} as const;
 ```
 
 Create a function to fetch contracts:
@@ -123,65 +123,59 @@ Create a function to fetch contracts:
 - category: 'lending' for aTokens, 'borrow' for debt tokens
 
 ```ts
-async function getLendingPoolContracts(
-  ctx: BaseContext,
-  lendingPool: Contract
-) {
-  const contracts: Contract[] = [];
+async function getLendingPoolContracts(ctx: BaseContext, lendingPool: Contract) {
+  const contracts: Contract[] = []
 
-  const reservesListRes = await call({
+  const reservesList = await call({
     ctx,
     target: lendingPool.address,
     abi: abi.getReservesList,
-  });
-
-  const reservesList: string[] = reservesListRes.output;
+  })
 
   const reservesDataRes = await multicall({
     ctx,
-    calls: reservesList.map((reserveTokenAddress) => ({
-      target: lendingPool.address,
-      params: [reserveTokenAddress],
-    })),
+    calls: reservesList.map(
+      (reserveTokenAddress) => ({ target: lendingPool.address, params: [reserveTokenAddress] } as const),
+    ),
     abi: abi.getReserveData,
-  });
+  })
 
   for (let i = 0; i < reservesDataRes.length; i++) {
-    const reserveDataRes = reservesDataRes[i];
-    if (!isSuccess(reserveDataRes)) {
-      continue;
+    const reserveDataRes = reservesDataRes[i]
+    if (!reserveDataRes.success) {
+      continue
     }
 
-    const underlyingToken = reserveDataRes.input.params[0];
-    const aToken = reserveDataRes.output.aTokenAddress;
-    const stableDebtToken = reserveDataRes.output.stableDebtTokenAddress;
-    const variableDebtToken = reserveDataRes.output.variableDebtTokenAddress;
+    const underlyingToken = reserveDataRes.input.params[0]
+    const aToken = reserveDataRes.output.aTokenAddress
+    const stableDebtToken = reserveDataRes.output.stableDebtTokenAddress
+    const variableDebtToken = reserveDataRes.output.variableDebtTokenAddress
 
     contracts.push(
       {
         chain: ctx.chain,
         address: aToken,
         underlyings: [underlyingToken],
-        category: "lend",
+        category: 'lend',
       },
       {
         chain: ctx.chain,
         address: stableDebtToken,
         underlyings: [underlyingToken],
-        category: "borrow",
+        category: 'borrow',
         stable: true,
       },
       {
         chain: ctx.chain,
         address: variableDebtToken,
         underlyings: [underlyingToken],
-        category: "borrow",
+        category: 'borrow',
         stable: false,
-      }
-    );
+      },
+    )
   }
 
-  return contracts;
+  return contracts
 }
 ```
 
