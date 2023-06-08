@@ -59,11 +59,10 @@ interface ContractsMap {
   [key: string]: Contract | Contract[] | RawContract | RawContract[];
 }
 
-interface ContractsConfig<C extends ContractsMap, P extends ContractsMap> {
-  contracts: C;
-  props?: P;
-  revalidate?: number;
-  revalidateProps?: { [key: string]: any };
+interface ContractsConfig<C extends ContractsMap> {
+  contracts: C
+  revalidate?: number
+  revalidateProps?: { [key: string]: any }
 }
 
 /**
@@ -76,13 +75,10 @@ type ExcludeRawContract<T> = {
 /**
  * Pass previous `revalidateProps` passed to `getContracts` handler to know where the previous revalidate process ended.
  */
-type GetContractsHandler<
-  C extends ContractsMap = ContractsMap,
-  P extends ContractsMap = ContractsMap
-> = (
+type GetContractsHandler<C extends ContractsMap = ContractsMap> = (
   ctx: BaseContext,
-  revalidateProps: { [key: string]: any }
-) => ContractsConfig<C, P> | Promise<ContractsConfig<C, P>>;
+  revalidateProps: { [key: string]: any },
+) => ContractsConfig<C> | Promise<ContractsConfig<C>>;
 ```
 
 Contract definition:

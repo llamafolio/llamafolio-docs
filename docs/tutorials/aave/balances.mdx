@@ -8,7 +8,7 @@ import TabItem from "@theme/TabItem";
 
 # Balances
 
-The **goal** of `getBalances` is to attach dynamic data to contracts returned previously e.g. `amount` of tokens, underlyings and rewards.
+The **goal** of `getBalances` is to resolve amounts to contracts returned previously e.g. `amount` of tokens, underlyings and rewards.
 
 Because aTokens, stable and variable debt tokens are ERC20 contracts, we can use `balanceOf` method to retrieve user balances.
 
@@ -31,15 +31,13 @@ async function getLendingPoolBalances(ctx: BalancesContext, contracts: Contract[
 }
 ```
 
-Important note: For performance reasons
-
 :::info
 
 Only contracts the user interacted with are passed to `getBalances`.
 
 :::
 
-A contract interaction is defined as follow:
+A **contract interaction** is defined as follow:
 
 - account made a transaction to this contract
 - account received this token through event `"Transfer(address,address,uint256)"`

@@ -39,8 +39,7 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/llamafolio/llamafolio-docs/tree/master/",
+          editUrl: "https://github.com/llamafolio/llamafolio-docs/tree/master/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -95,8 +94,16 @@ const config = {
             title: "Community",
             items: [
               {
+                label: "Website",
+                href: "https://llamafolio.com",
+              },
+              {
                 label: "Twitter",
                 href: "https://twitter.com/LlamaFolio",
+              },
+              {
+                label: "Discord",
+                href: "https://discord.llamafolio.com",
               },
             ],
           },

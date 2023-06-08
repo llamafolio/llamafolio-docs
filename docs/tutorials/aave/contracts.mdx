@@ -13,7 +13,12 @@ The **goal** of `getContracts` is to return all the contracts defined by a proto
 - DEX pairs
 - ...
 
-Important note: For performance reasons (ex: fetching 1 million pools), `getContracts` is executed on a regular basis, but not during the update balance process.
+:::info
+
+For performance reasons (ex: fetching 1 million pools), `getContracts` is called on a regular basis by a background task, but not when updating someone's balances.
+
+:::
+
 
 ## Lending Pool
 
@@ -117,7 +122,6 @@ const abi = {
 
 Create a function to fetch contracts:
 
-- chain
 - address: address of the contract the user "interacted" with, either by making a transaction to it or by receiving it. In this example, the user receives aTokens when lending / borrowing on the platform.
 - underlyings: actual underlying token. aDAI -> DAI
 - category: 'lending' for aTokens, 'borrow' for debt tokens
