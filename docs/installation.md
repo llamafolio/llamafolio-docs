@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+pagination_next: tutorials/aave/index
 ---
 
 # Installation
