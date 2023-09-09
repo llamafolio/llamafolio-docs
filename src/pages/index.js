@@ -21,14 +21,6 @@ function HomepageHeader() {
             Get Started
           </Link>
         </div>
-
-        <Link
-          style={{ marginTop: "40px" }}
-          className="button button--primary button--lg"
-          href="https://beta.llamafolio.com"
-        >
-          Currently in Beta !
-        </Link>
       </div>
     </header>
   );
