@@ -1,0 +1,390 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "LlamaFolio API",
+    "version": "2024-03-11 09:17:48UTC"
+  },
+  "servers": [
+    {
+      "url": "https://api.llamafolio.com",
+      "description": "LlamaFolio API (production)",
+      "variables": {
+        "basePath": {
+          "default": ""
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/adapters": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /adapters"
+          }
+        }
+      }
+    },
+    "/balances/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /balances/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/balances/{address}/tokens": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /balances/{address}/tokens"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/calendar/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /calendar/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/contracts/{chain}/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /contracts/{chain}/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "chain",
+          "in": "path",
+          "description": "Generated path parameter for chain",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/gas_used/{chain}/chart": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /gas_used/{chain}/chart"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "chain",
+          "in": "path",
+          "description": "Generated path parameter for chain",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/history/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /history/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/holders/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /holders/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/info/stats": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /info/stats"
+          }
+        }
+      }
+    },
+    "/info/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /info/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/labels/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /labels/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/nfts/history/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /nfts/history/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/nfts/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /nfts/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/protocols": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /protocols"
+          }
+        }
+      }
+    },
+    "/protocols/latest": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /protocols/latest"
+          }
+        }
+      }
+    },
+    "/snapshots/{address}/latest": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /snapshots/{address}/latest"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/sync_status": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /sync_status"
+          }
+        }
+      }
+    },
+    "/tokens/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /tokens/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/tokens/{chain}/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /tokens/{chain}/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "chain",
+          "in": "path",
+          "description": "Generated path parameter for chain",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/v1/balances/{address}": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "Default response for GET /v1/balances/{address}"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "default": {
+            "description": "Default response for POST /v1/balances/{address}"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "address",
+          "in": "path",
+          "description": "Generated path parameter for address",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+  }
+}

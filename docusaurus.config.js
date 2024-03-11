@@ -72,6 +72,11 @@ const config = {
             label: "Tutorials",
           },
           {
+            href: "/api",
+            label: "API",
+            position: "left",
+          },
+          {
             href: "https://github.com/llamafolio/",
             label: "GitHub",
             position: "right",
