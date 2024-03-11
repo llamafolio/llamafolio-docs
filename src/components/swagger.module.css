@@ -1,0 +1,7 @@
+:global(.scheme-container) {
+  display: none;
+}
+
+:global(pre) {
+  background: transparent;
+}
